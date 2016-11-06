@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 import settings
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 # Interact with the hardware
 def go_forward():
@@ -84,4 +84,9 @@ client.connect(settings.MQTT_SERVER, 1883, 60)
 # handles reconnecting.
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
-client.loop_forever()
+try:
+    client.loop_forever()
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    exit()
+
