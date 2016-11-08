@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import settings
 
 client = mqtt.Client()
-client.connect(settings.MQTT_SERVER,1883,60)
+client.connect(settings.MQTT_SERVER, 1883, 60)
 
 
 def p(message):
