@@ -1,22 +1,48 @@
 import paho.mqtt.client as mqtt
 import settings
-
+import RPI.GPIO as GPIO
 
 # Interact with the hardware
 def go_forward():
     print("Going forward...")
-
+    GPIO.output(settings.HB_PIN_2, False)
+    GPIO.output(settings.HB_PIN_4, False)
+    GPIO.output(settings.HB_PIN_1, True)
+    GPIO.output(settings.HB_PIN_3, True)
 
 def go_backward():
     print("Going backwards...")
+    # Turn PIN_MOTOR_RIGHT ON and PIN_MOTOR_LEFT ON,
+    # but reverse...
+    GPIO.output(settings.HB_PIN_1, False)
+    GPIO.output(settings.HB_PIN_3, False)
+    GPIO.output(settings.HB_PIN_2, True)
+    GPIO.output(settings.HB_PIN_4, True)
 
 
 def go_left():
     print("Going left...")
+    # Turn PIN_MOTOR_RIGHT ON
+    GPIO.output(settings.HB_PIN_1, True)
+    GPIO.output(settings.HB_PIN_3, False)
+    GPIO.output(settings.HB_PIN_2, False)
+    GPIO.output(settings.HB_PIN_4, False)
 
 
 def go_right():
     print("Going right...")
+    # Turn PIN_MOTOR_LEFT ON
+    GPIO.output(settings.HB_PIN_1, False)
+    GPIO.output(settings.HB_PIN_3, True)
+    GPIO.output(settings.HB_PIN_2, False)
+    GPIO.output(settings.HB_PIN_4, False)
+
+
+def brake():
+    GPIO.output(settings.HB_PIN_1, False)
+    GPIO.output(settings.HB_PIN_3, False)
+    GPIO.output(settings.HB_PIN_2, False)
+    GPIO.output(settings.HB_PIN_4, False)
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -38,6 +64,14 @@ def on_message(client, userdata, msg):
         go_left()
     elif message == "d":
         go_right()
+    else:
+        brake()
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(settings.HB_PIN_1, GPIO.OUT)
+GPIO.setup(settings.HB_PIN_2, GPIO.OUT)
+GPIO.setup(settings.HB_PIN_3, GPIO.OUT)
+GPIO.setup(settings.HB_PIN_4, GPIO.OUT)
 
 
 client = mqtt.Client()
